@@ -1,17 +1,55 @@
 .software {
         display: block;
-        width: 640px;
-        height: 480px;
+        width: 128px;
+        height: 240px;
+        position: absolute;
         background: url("software.png");
 }
 
+@media only screen and (max-width: 1200px){
+        .software {
+                background: url("software.png") -128px 0 no-repeat;
+        }
+}
+
+@media only screen and (max-width: 1100px){
+        .software {
+                background: url("software.png") -256px 0 no-repeat;
+        }
+}
+
+@media only screen and (max-width: 1000px){
+        .software {
+                background: url("software.png") -384px 0 no-repeat;
+        }
+}
+@media only screen and (max-width: 900px){
+        .software {
+                background: url("software.png") -512px 0 no-repeat;
+        }
+}
+@media only screen and (max-width: 800px){
+        .software {
+                background: url("software.png") 0 -240px no-repeat;
+        }
+}
 @media only screen and (max-width: 700px){
         .software {
-                display: block;
-                width: 128px;
-                height: 240px;
-                position: relative;
-                border-image-slice: 10% 10% 10% 10%;
-                background: url("software.png");
+                background: url("software.png") -128px -240px no-repeat;
+        }
+}
+@media only screen and (max-width: 600px){
+        .software {
+                background: url("software.png") -256px -240px no-repeat;
+        }
+}
+@media only screen and (max-width: 500px){
+        .software {
+                background: url("software.png") -384px -240px no-repeat;
+        }
+}
+@media only screen and (max-width: 400px){
+        .software {
+                background: url("software.png") -512px -240px no-repeat;
         }
 }
