@@ -1,7 +1,8 @@
+The synchronization of the lyrics with the video has been implemented correctly, as well as the inclusion of images in the annotations.
 
+I did not discuss this assignment with anyone.
 
-
-
+Approx. time taken: 1 hour
 
 
 References:
