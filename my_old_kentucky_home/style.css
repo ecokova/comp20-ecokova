@@ -1,3 +1,33 @@
+body {
+        text-align: center;
+        
+}
+
+#music_video {
+        border-radius: 2%;
+        padding: 1%;
+        background: #F8EDDE;
+        border: solid 4px #000000;
+}
+
+#left_bugle {
+        width: 45px;
+}
+#right_bugle {
+        width: 45px;
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        filter: FlipH;
+        -ms-filter: "FlipH";
+}
+.horse {
+        width: 35px;
+}
+.roses {
+        width: 300px;
+}
 #lyrics {
         text-align: center;
         font-family: Georgia;
