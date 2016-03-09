@@ -1,1 +1,14 @@
-/* Your CSS here... */
+.message {
+
+        background-color: #AAAABB;
+        border-radius: 5px;
+        padding: 3px;
+
+}
+
+.author {
+        color: #444488;
+        padding: 10px;
+        font-family: Georgia;
+        font-size: 10px;
+}
