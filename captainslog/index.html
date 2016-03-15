@@ -7,7 +7,8 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
         <script>
                 $(document).ready(function() { 
-                        loadPrevious();
+                        $('#log').html(localStorage.getItem("messages"));
+                        
                         $('#msg').change(function() {
                                 var days = ["Sun", "Mon", "Tues", "Weds", 
                                         "Thurs", "Fri", "Sat"];
@@ -28,15 +29,10 @@
                                         "<br/>" + $('#log').html();
 
                                 $('#log').html(string);
+                                localStorage.setItem("messages", string);
                                 $('#msg').val("");
                         });
                 });
-                function loadPrevious () {
-                        for (var e in localStorage) {
-                                $('#log').html(e + "<br/>" +
-                                        $('#log').html(string));
-                        }
-                }
         </script>
 </head>
 
