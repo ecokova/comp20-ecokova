@@ -68,21 +68,21 @@
 
                 return d;
         }
-        function findClosest() {
-
-        }
         function populateMap(people, landmarks) {
                 var person_icon = {
                         url: "person_image.gif",
-                        //http://idjpanda.deviantart.com/art/Free-Pusheen-Cat-Icon-482395710
+                        // http://mochatchi.deviantart.com/art/Free-Icon-Emote-Twilight-Hairball-Pusheen-493823731
                         scaledSize: new google.maps.Size(25,25)
-                }
+                };
                 var landmark_icon = {
                         url: "landmark_image.png",
                         //https://www.iconfinder.com/icons/290144/building_business_finance_office_icon#size=128
                         scaledSize: new google.maps.Size(25,25)
-                }
-                
+                };
+                var me_icon = {
+                        url: "me_image_alt.gif",
+                        scaledSize: new google.maps.Size(35,35)
+                };
                 
                 var infowindow = new google.maps.InfoWindow();
 
@@ -90,7 +90,9 @@
                         var m = new google.maps.Marker({
                                 position: new google.maps.LatLng(people[i].lat, people[i].lng),
                                 title: people[i].login,
-                                content: people[i].login,
+                                content: "<center>" + people[i].login + 
+                                        "<br/><b>" + haversineDistance([people[i].lng,people[i].lat], [longitude, latitude], true) +
+                                        "</b> miles away from me</center>",
                                 icon: person_icon
                         });
                         m.setMap(map);
@@ -115,7 +117,7 @@
                                 position: new google.maps.LatLng(loc[1], loc[0]),
                                 distance: dist,
                                 title: landmarks[j].properties.Location_Name,
-                                content: landmarks[j].properties.Location_Name + " " + dist,
+                                content: landmarks[j].properties.Details,
                                 icon: landmark_icon                        
                         });
                         m.setMap(map);
@@ -130,10 +132,10 @@
                 map.panTo(myloc);
                 var marker = new google.maps.Marker({
                         position: myloc,
-                        content: "I am EMMA_DODSON. The closest landmark from where I am is " 
-                                + closest.name + " which is " + 
-                                closest.dist + " miles away from me." ,
-                        icon: person_icon
+                        content: "I am EMMA_DODSON. The closest landmark from where I am is <b>" 
+                                + closest.name + "</b> which is <b>" + 
+                                closest.dist + "</b> miles away from me." ,
+                        icon: me_icon
                 });
                 marker.setMap(map);
                 google.maps.event.addListener(marker, 'click', function () {
