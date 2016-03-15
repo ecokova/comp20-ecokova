@@ -142,6 +142,17 @@
                                 infowindow.setContent(marker.content);
                                 infowindow.open(map, marker);
                         });
+                var closestPathCoords = [
+                        {lat: latitude, lng: longitude},
+                        {lat: closest.pos[1], lng: closest.pos[0]}
+                ];
+                var path = new google.maps.Polyline({
+                        path: closestPathCoords,
+                        strokeColor: '#5599BB',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 2
+                });
+                path.setMap(map);
         }
 </script>
 </head>
