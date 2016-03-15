@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+        <title>Captain's Log</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+        <script>
+                $(document).ready(function() { 
+                        loadPrevious();
+                        $('#msg').change(function() {
+                                var days = ["Sun", "Mon", "Tues", "Weds", 
+                                        "Thurs", "Fri", "Sat"];
+                                var months = ["Jan", "Feb", "Mar", "Apr",
+                                        "May", "Jun", "Jul", "Aug",
+                                        "Sept", "Oct", "Nov", "Dec"];
+                                var time = new Date(Date.now());
+
+                                var timeStamp = days[time.getDay()] + " " + 
+                                        months[time.getMonth()] + " " + 
+                                        time.getDate() + " " + 
+                                        time.getHours() + ":" +
+                                        time.getMinutes() + ":" + 
+                                        time.getSeconds() + " " + 
+                                        time.getFullYear();
+                                var string = timeStamp + " - " + 
+                                        $('#msg').val() + 
+                                        "<br/>" + $('#log').html();
+
+                                $('#log').html(string);
+                                $('#msg').val("");
+                        });
+                });
+                function loadPrevious () {
+                        for (var e in localStorage) {
+                                $('#log').html(e + "<br/>" +
+                                        $('#log').html(string));
+                        }
+                }
+        </script>
+</head>
+
+<body>
+        <h1>Captain's Log</h1>
+        <h3>New entry: <input type="text" id="msg" name="msg" size="30" /></h3>
+        <div id="log"></div>
+</body>
+</html>
