@@ -8,5 +8,7 @@ Time spent: 0.5 hours
 
 ###References
 http://www.bennadel.com/blog/2105-exploring-html5-s-localstorage---persistent-client-side-key-value-pairs.htm
+
 https://api.jquery.com/change/
+
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
