@@ -5,8 +5,10 @@ the user and nearby entities. The entities included other people in the
 area and famous landmarks one mile from the user. Each entity included its
 distance from the user and identifying information.
 
-###### Collaboration: I received help from Kalina Allen, Catherine Gao, and Monica Lyons with debugging.
-###### Time spent: roughly 10 hours
+###### Collaboration: 
+I received help from Kalina Allen, Catherine Gao, and Monica Lyons with debugging.
+###### Time spent: 
+roughly 10 hours
 
 ##References:
 ####Images
