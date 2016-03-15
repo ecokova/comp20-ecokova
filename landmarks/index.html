@@ -3,32 +3,147 @@
 <head>
 <meta charset="utf-8"/>
 <title>Historic Landmarks</title>
-<link rel="stylesheet" href="style.css" type="text/css" />
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+<link rel="stylesheet" href="style.css" />
+
 <script>
-        var latitude = -99999;
-        var longitude = -99999;
+        var latitude = 0;
+        var longitude = 0;
+        var map;
         function getLocation() {
-                navigator.geolocation.getCurrentPosition(function(pos) {
+                var myoptions = {
+                        center: new google.maps.LatLng(latitude, longitude),
+                        zoom: 14, 
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                map = new google.maps.Map(document.getElementById("map_canvas"), myoptions);
+                if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function(pos) {
                                 latitude = pos.coords.latitude;
                                 longitude = pos.coords.longitude;
                                 getNearby();
+
                         });
+                } else {
+                        alert("Geolocation not supported in browser.");
+                }
         }
         function getNearby() {
                 var http = new XMLHttpRequest();
 
                 http.onreadystatechange = function() {
                         if (http.readyState == 4 && http.status == 200) {
-                                var thingsNearby = JSON.parse(http.responseText);
-                                console.log(thingsNearby);
+                                var nearby = JSON.parse(http.responseText);
+                                populateMap(nearby.people, nearby.landmarks);
                         }
                 };
                 http.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
                 http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 http.send("login=EMMA_DODSON&lat="+latitude+"&lng="+longitude);
         }
+        function haversineDistance(coords1, coords2, isMiles) {
+                function toRad(x) {
+                        return x * Math.PI / 180;
+                }
+
+                var lon1 = coords1[0];
+                var lat1 = coords1[1];
+
+                var lon2 = coords2[0];
+                var lat2 = coords2[1];
+
+                var R = 6371; // km
+
+                var x1 = lat2 - lat1;
+                var dLat = toRad(x1);
+                var x2 = lon2 - lon1;
+                var dLon = toRad(x2)
+                var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                var d = R * c;
+
+                if(isMiles) d /= 1.60934;
+
+                return d;
+        }
+        function findClosest() {
+
+        }
+        function populateMap(people, landmarks) {
+                var person_icon = {
+                        url: "person_image.gif",
+                        //http://idjpanda.deviantart.com/art/Free-Pusheen-Cat-Icon-482395710
+                        scaledSize: new google.maps.Size(25,25)
+                }
+                var landmark_icon = {
+                        url: "landmark_image.png",
+                        //https://www.iconfinder.com/icons/290144/building_business_finance_office_icon#size=128
+                        scaledSize: new google.maps.Size(25,25)
+                }
+                
+                
+                var infowindow = new google.maps.InfoWindow();
+
+                for (var i = 0; i < people.length; i++) {
+                        var m = new google.maps.Marker({
+                                position: new google.maps.LatLng(people[i].lat, people[i].lng),
+                                title: people[i].login,
+                                content: people[i].login,
+                                icon: person_icon
+                        });
+                        m.setMap(map);
+                        google.maps.event.addListener(m, 'click', function () {
+                                infowindow.setContent(this.content);
+                                infowindow.open(map, this);
+                        });
+                }
+                var closest = {
+                        dist: 9999999,
+                        name: ""
+                };
+                for (var j = 0; j < landmarks.length; j++) {
+                        var loc = landmarks[j].geometry.coordinates;
+                        var dist = haversineDistance([longitude, latitude], loc, true);
+                        if (dist < closest.dist) {
+                                closest.dist = dist;
+                                closest.pos = loc;
+                                closest.name = landmarks[j].properties.Location_Name;
+                        }
+                        var m = new google.maps.Marker({
+                                position: new google.maps.LatLng(loc[1], loc[0]),
+                                distance: dist,
+                                title: landmarks[j].properties.Location_Name,
+                                content: landmarks[j].properties.Location_Name + " " + dist,
+                                icon: landmark_icon                        
+                        });
+                        m.setMap(map);
+                        
+                        google.maps.event.addListener(m, 'click', function () {
+                                infowindow.setContent(this.content);
+                                infowindow.open(map, this);
+                        });
+                }
+
+                var myloc = new google.maps.LatLng(latitude, longitude);
+                map.panTo(myloc);
+                var marker = new google.maps.Marker({
+                        position: myloc,
+                        content: "I am EMMA_DODSON. The closest landmark from where I am is " 
+                                + closest.name + " which is " + 
+                                closest.dist + " miles away from me." ,
+                        icon: person_icon
+                });
+                marker.setMap(map);
+                google.maps.event.addListener(marker, 'click', function () {
+                                infowindow.setContent(marker.content);
+                                infowindow.open(map, marker);
+                        });
+        }
 </script>
 </head>
 <body onload="getLocation()">
+        <div id="map_canvas"></div>
 </body>
 </html>
