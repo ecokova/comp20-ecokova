@@ -21,8 +21,6 @@
                         navigator.geolocation.getCurrentPosition(function(pos) {
                                 latitude = pos.coords.latitude;
                                 longitude = pos.coords.longitude;
-				console.log(latitude);
-				console.log(longitude);
                                 getNearby();
 
                         });
