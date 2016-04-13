@@ -21,6 +21,8 @@
                         navigator.geolocation.getCurrentPosition(function(pos) {
                                 latitude = pos.coords.latitude;
                                 longitude = pos.coords.longitude;
+				console.log(latitude);
+				console.log(longitude);
                                 getNearby();
 
                         });
@@ -37,7 +39,7 @@
                                 populateMap(nearby.people, nearby.landmarks);
                         }
                 };
-                http.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
+                http.open("POST", "https://rocky-retreat-70931.herokuapp.com/sendLocation", true);
                 http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 http.send("login=EMMA_DODSON&lat="+latitude+"&lng="+longitude);
         }
