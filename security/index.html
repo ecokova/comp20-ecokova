@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Security & Privacy Analysis of A2 & A3 </title>
+	<link rel="stylesheet" href="style.css" type="text/css"/>
+	<meta charset="utf-8"/>
+</head>
+
+<body>
+<h1>Security Assessment of Assignments 2 and 3</h3>
+<h3>Introduction</h2>
+<hr/>
+<p></p>
+<h3>Abstract of Findings</h2>
+<hr/>
+<p></p>
+<h3>Issues Found</h2>
+<hr/>
+<p> Issue - HTML Injection<br/>
+Location - sendLocation<br/>
+Severity - Medium; can change content of site but mostly messes up appearance<br/>
+Description - The page accepts anything as data for the login, and later renders all the entries without parsing again. Thus, if login was code, it will be blindly executed. <br/>
+<div class="images">Attack: <br/><img src="curl_post_img_injection.png"/>
+<br/>
+Result:<br/><img src="img_injection.png" /></div><br/>
+Recommendations - escape out special characters before storing in database (*look up code*)<br/>
+</p>
+<p> Issue - XSS with usability<br/>
+Location - sendLocation<br/>
+Severity - High, can render site completely unusable<br/>
+Description - The page can also execute javascript, interruupting user experience, and also has potential to render site unusable, etc<br/>
+<div class="images">Attack: <br/><img src="curl_post_xss.png"/>
+<br/>
+Result:<br/><img src="xss.png" /><br/>
+<br/>
+Attack: <br/> <img src="curl_post_spam.png"/>
+<br/>
+Result: <br/>
+<img src="spam.png"/></div><br/>
+Recommendations - escape out special characters before storing in database (*look up code*)<br/>
+</p>
+
+<p> Issue - XSS with local storage and cookies<br/>
+Location - sendLocation<br/>
+Severity - High; provides a way to actually interact with the client machine<br/>
+Description - JS can also be used to store potentially malicious data on the client's computer through browser local storage and cookies.<br/>
+<div class="images">Attack: <br/>
+<img src="curl_post_local_storage.png"/> <br/>
+Result: <br/>
+<img src="local_storage.png" /></div><br/>
+Recommendations - escape out special characters before storing in database (*look up code*)<br/>
+</p>
+<h3>Conclusion</h2>
+<hr/>
+<p></p>
+</body>
+</html>

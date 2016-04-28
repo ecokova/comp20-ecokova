@@ -1,0 +1,15 @@
+h1 {
+	padding: 0px;
+	bottom-margin: 0px;
+}
+
+img {
+	width: 600px;
+	border-radius: 3px;
+	box-shadow: 3px 3px 10px #888;
+	margin: 5px;
+}
+
+.images {
+	text-align: center;
+}
