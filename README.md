@@ -1,4 +1,4 @@
-# End of Semester Reflectio
+# End of Semester Reflection
 
 This Git repository was used for assignments and labs in COMP 20 Spring 2016. 
 
