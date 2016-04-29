@@ -1,3 +1,7 @@
+body {
+	margin: 0px 100px 0px 100px;
+	font-family: ‘Trebuchet MS’, Helvetica, sans-serif;
+}
 h1 {
 	padding: 0px;
 	bottom-margin: 0px;
@@ -12,4 +16,12 @@ img {
 
 .images {
 	text-align: center;
+}
+
+.heading {
+	font-weight: bold;
+}
+
+.category {
+	text-decoration: underline;
 }

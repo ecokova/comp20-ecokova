@@ -1,57 +1,84 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Security & Privacy Analysis of A2 & A3 </title>
-	<link rel="stylesheet" href="style.css" type="text/css"/>
-	<meta charset="utf-8"/>
+		<title>Security & Privacy Analysis of A2 & A3 </title>
+		<link rel="stylesheet" href="style.css" type="text/css"/>
+		<meta charset="utf-8"/>
 </head>
 
 <body>
-<h1>Security Assessment of Assignments 2 and 3</h3>
-<h3>Introduction</h2>
+<h1>Security Assessment of Assignments 2 and 3</h2>
+<h2>Introduction</h2>
 <hr/>
-<p></p>
-<h3>Abstract of Findings</h2>
+<p>The product I am analyzing is the front- and back-end of a web application that allows a user to see the previous login locations of his/her classmates and famous landmarks within a mile of his/her current location.</p>
+<p>The client-side portion of the application is fairly straightforward, consisting only of a map with pins marking the locations of people and landmarks. The server-side portion consists of a database of landmarks and logins and a server that handles queries to the API. The server accepts a number of requests, including a POST request for sending one's location and receiving all landmark and people data (/sendLocation), and an index page listing all logins in chronological order.</p>
+<p>To assess the security of the application, I will primarily be focusing on this side of the application as vulnerabilities here could affect every visitor to the site.</p>
+<h2>Methodology</h2>
 <hr/>
-<p></p>
-<h3>Issues Found</h2>
+<p>To test this application, I primarily made use of the command-line tool <span class="heading">curl</span> to execute HTTP POST requests. Looking through the source, I noticed that not all of the request data was processed for validity. The login data in particular is very vulnerable to tampering, so I focused my attacks on this.</p>
+<h2>Abstract of Findings</h2>
 <hr/>
-<p> Issue - HTML Injection<br/>
-Location - sendLocation<br/>
-Severity - Medium; can change content of site but mostly messes up appearance<br/>
-Description - The page accepts anything as data for the login, and later renders all the entries without parsing again. Thus, if login was code, it will be blindly executed. <br/>
-<div class="images">Attack: <br/><img src="curl_post_img_injection.png"/>
-<br/>
-Result:<br/><img src="img_injection.png" /></div><br/>
-Recommendations - escape out special characters before storing in database (*look up code*)<br/>
-</p>
-<p> Issue - XSS with usability<br/>
-Location - sendLocation<br/>
-Severity - High, can render site completely unusable<br/>
-Description - The page can also execute javascript, interruupting user experience, and also has potential to render site unusable, etc<br/>
-<div class="images">Attack: <br/><img src="curl_post_xss.png"/>
-<br/>
-Result:<br/><img src="xss.png" /><br/>
-<br/>
-Attack: <br/> <img src="curl_post_spam.png"/>
-<br/>
-Result: <br/>
-<img src="spam.png"/></div><br/>
-Recommendations - escape out special characters before storing in database (*look up code*)<br/>
-</p>
-
-<p> Issue - XSS with local storage and cookies<br/>
-Location - sendLocation<br/>
-Severity - High; provides a way to actually interact with the client machine<br/>
-Description - JS can also be used to store potentially malicious data on the client's computer through browser local storage and cookies.<br/>
-<div class="images">Attack: <br/>
-<img src="curl_post_local_storage.png"/> <br/>
-Result: <br/>
-<img src="local_storage.png" /></div><br/>
-Recommendations - escape out special characters before storing in database (*look up code*)<br/>
-</p>
-<h3>Conclusion</h2>
+<p>The application had one very vulnerable page: sentLocation. All major issues found were rooted in the fact that the application takes a client's input without validating it. This leaves a way for an attacker to run their own code on the site, and even to store data on the client's computer.</p>
+<h2>Issues Found</h2>
 <hr/>
-<p></p>
+<ol>
+<li>
+		<p><span class="heading">HTML Injection</span><br/>
+		<span class="category">Location</span> - /sendLocation<br/>
+		<span class="category">Severity</span> - Medium 
+		<br/>While this vulnerability is very easy to exploit, an attacker can mainly only add things to the page. This does disrupt the content of the page, but overall is not the most serious vulnerability.<br/>
+		<span class="category">Description</span> - The issue is that the server accepts anything as data for the login parameter, and adds it blindly to the database. Later, when the home page is rendered, all entries are retrieved from the database and rendered as-is on the HTML page. Thus, if the login provided was valid HTML, it will render it onto the page.<br/>
+		<div class="images">
+				<span class="heading">Attack</span>
+				<br/>
+				<img src="curl_post_img_injection.png"/>
+				<br/>
+				<span class="heading"><span class="heading">Result</span></span>
+				<br/>
+				<img src="img_injection.png" />
+		</div>
+		<br/>
+		<span class="category">Recommendations</span> - The best way to resolve this vulnerability is to preprocess data before storing it into the database to ensure it is a valid username, 
+or by replacing special characters (such as &gt; or &lt;) with their HTML equivalents (&amp;gt; and &amp;lt; respectively) before rendering the HTML.<br/>
+		</p>
+</li>
+<li>
+		<p><span class="heading">XSS (Usability)</span><br/>
+		<span class="category">Location</span> - /sendLocation and index page<br/>
+		<span class="category">Severity</span> - High
+		<br/> This vulnerability makes it possible to render the site wholly unusable. <br/>
+		<span class="category">Description</span> - In addition to rendering HTML code passed in as a login, the site can also execute JavaScript. Since the data is not modified at all, an attacker can effectively run any valid JavaScript. <br/>
+		<div class="images"><span class="heading">Attack</span> <br/><img src="curl_post_xss.png"/>
+		<br/>
+		<span class="heading">Result</span><br/><img src="xss.png" /><br/></div>
+		<br/>
+		While the above example is fairly minor - just a single alert box appearing - the results can be much more disruptive. Shown below is the result of creating alert boxes in an infinite loop.<br/><br/>
+		<div class="images"><span class="heading">Attack</span> <br/><img src="curl_post_spam.png"/>
+		<br/>
+		<span class="heading">Result</span> <br/>
+		<img src="spam.png"/></div><br/>
+		Since the login values are stored directly into the database for later rendering, this disruptive code will affect every subsequent visitor to the page.<br/>
+		<span class="category">Recommendations</span> - The solution, once more, is to escape out special characters so they are instead only rendered with the other HTML.<br/>
+		</p>
+</li>
+<li>
+		<p><span class="heading">XSS (Local storage and cookies)</span><br/>
+		<span class="category">Location</span> - /sendLocation and index page<br/>
+		<span class="category">Severity</span> - High <br/>
+		This vulnerability provides a way for an attacker to directly interact with the client's machine.<br/> 
+		<span class="category">Description</span> - Unchecked JavaScript code sent as data can also be used to store data on the client's computer without their permission through browser local storage and cookies.<br/>
+		<div class="images"><span class="heading">Attack</span> <br/>
+		<img src="curl_post_local_storage.png"/> <br/>
+		<span class="heading">Result</span> <br/>
+		<img src="local_storage.png" /></div><br/>
+		While the above is a fairly benign example, an attacker could exploit this vulnerability to instead store potentially malicious data.<br/>
+		<span class="category">Recommendations</span> - Once again, the best solution would be to escape out special characters so that JavaScript could not be executed.<br/>
+		</p>
+		</li>
+</ol>
+<h2>Conclusion</h2>
+<hr/>
+<p>Overall, the site is very vulnerable to attack as it stands. It can be very easily fixed by escaping special characters so that the application will not execute potentially malicious code. Luckily, this solution is fairly simple and cheap to implement.</p>
+<br/>
 </body>
 </html>
